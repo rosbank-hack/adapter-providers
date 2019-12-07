@@ -1,4 +1,4 @@
-package ros.hack.bonuses.service;
+package ros.hack.providers.service;
 
 import com.github.voteva.Operation;
 

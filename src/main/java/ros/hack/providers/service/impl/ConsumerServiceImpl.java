@@ -1,4 +1,4 @@
-package ros.hack.bonuses.service.impl;
+package ros.hack.providers.service.impl;
 
 import com.github.voteva.Operation;
 import lombok.NonNull;
@@ -8,19 +8,19 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ros.hack.bonuses.service.ConsumerService;
-import ros.hack.bonuses.service.ProducerService;
+import ros.hack.providers.service.ConsumerService;
+import ros.hack.providers.service.ProducerService;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static ros.hack.bonuses.consts.BonusConsts.SERVICE_NAME;
+import static ros.hack.providers.consts.ProvidersConsts.SERVICE_NAME;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class ConsumerServiceImpl<K, V> implements ConsumerService<K, V> {
+public class ConsumerServiceImpl implements ConsumerService {
 
     @Value("${kafka.topic.operation-topic}")
     private String topic;
