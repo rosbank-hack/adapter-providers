@@ -1,0 +1,20 @@
+[
+  {
+    "providerId": "5ecc429f-09e0-4191-bf50-ea7d9cce9c97",
+    "providerName": "Пятерочка",
+    "providerIcon": "https://drive.google.com/uc?authuser=0&id=1iHOGbeqSfpP6AGi0Reh-yVh9pbmqwgKD&export=download",
+    "providerMcc": "5411"
+  },
+  {
+    "providerId": "e774c8df-ed90-4df9-9014-4257493a4083",
+    "providerName": "Илья Андреевич П.",
+    "providerIcon": "https://drive.google.com/uc?authuser=0&id=11DyHALnedrz_rkbW5Emfh8GCVOaUGTkX&export=download",
+    "providerMcc": "6534"
+  },
+  {
+    "providerId": "27590e23-af43-4279-93da-a556e7903a1d",
+    "providerName": "Burger King",
+    "providerIcon": "https://drive.google.com/uc?authuser=0&id=19KPW1cjngoZxiyIdFMHXkjjA6xyF90GN&export=download",
+    "providerMcc": "5814"
+  }
+]

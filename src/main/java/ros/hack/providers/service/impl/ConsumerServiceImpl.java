@@ -8,14 +8,16 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ros.hack.providers.config.KafkaProperties;
+import ros.hack.providers.model.ProviderDto;
 import ros.hack.providers.service.ConsumerService;
 import ros.hack.providers.service.ProducerService;
+import ros.hack.providers.service.ProviderService;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static ros.hack.providers.consts.Constants.SERVICE_NAME;
+import static ros.hack.providers.consts.Constants.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -24,10 +26,13 @@ public class ConsumerServiceImpl implements ConsumerService {
 
     private final KafkaProperties kafkaProperties;
     private final ProducerService producerService;
+    private final ProviderService providerService;
 
     @Override
     @Transactional
-    @KafkaListener(topics = "${kafka.payment-topic}", containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = "${kafka.payment-topic}",
+            containerFactory = "kafkaListenerContainerFactory",
+            groupId = "${kafka.group-id")
     public void consume(@NonNull List<Operation> operations) {
         operations.forEach(operation -> {
             log.info(operation.toString());
@@ -36,24 +41,31 @@ public class ConsumerServiceImpl implements ConsumerService {
     }
 
     private Operation addOperation(@NonNull Operation operation) {
-        com.github.voteva.Service providerService = new com.github.voteva.Service();
+        com.github.voteva.Service provider = new com.github.voteva.Service();
         if (operation.getServices() != null
                 && operation.getServices().get(SERVICE_NAME) != null) {
-            providerService = operation.getServices().get(SERVICE_NAME);
+            provider = operation.getServices().get(SERVICE_NAME);
         }
 
         Map<String, String> request = new HashMap<>();
-        if (providerService.getRequest() != null) {
-            request = providerService.getRequest();
+        if (provider.getRequest() != null) {
+            request = provider.getRequest();
         }
         Map<String, String> response = request;
 
-        response.put("amount", String.valueOf(Math.random()));
+        ProviderDto providerDto = providerService.getProviderById(request.get(PROVIDER_ID));
 
-        providerService.setRequest(request);
-        providerService.setResponse(response);
+        if (providerDto != null) {
+            response.put(PROVIDER_ID, providerDto.getProviderId());
+            response.put(PROVIDER_NAME, providerDto.getProviderName());
+            response.put(PROVIDER_MCC, providerDto.getProviderMcc());
+            response.put(PROVIDER_ICON, providerDto.getProviderIcon());
+        }
 
-        operation.getServices().put(SERVICE_NAME, providerService);
+        provider.setRequest(request);
+        provider.setResponse(response);
+
+        operation.getServices().put(SERVICE_NAME, provider);
         return operation;
     }
 }
