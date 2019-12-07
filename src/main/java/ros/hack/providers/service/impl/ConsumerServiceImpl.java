@@ -4,10 +4,10 @@ import com.github.voteva.Operation;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ros.hack.providers.config.KafkaProperties;
 import ros.hack.providers.service.ConsumerService;
 import ros.hack.providers.service.ProducerService;
 
@@ -15,45 +15,45 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static ros.hack.providers.consts.ProvidersConsts.SERVICE_NAME;
+import static ros.hack.providers.consts.Constants.SERVICE_NAME;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class ConsumerServiceImpl implements ConsumerService {
 
-    @Value("${kafka.topic.operation-topic}")
-    private String topic;
-
+    private final KafkaProperties kafkaProperties;
     private final ProducerService producerService;
 
     @Override
     @Transactional
-    @KafkaListener(topics = "${kafka.topic.payment-topic}", containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = "${kafka.payment-topic}", containerFactory = "kafkaListenerContainerFactory")
     public void consume(@NonNull List<Operation> operations) {
         operations.forEach(operation -> {
             log.info(operation.toString());
-            producerService.send(topic, addOperation(operation));
+            producerService.send(kafkaProperties.getOperationTopic(), addOperation(operation));
         });
     }
 
     private Operation addOperation(@NonNull Operation operation) {
-        Map<String, com.github.voteva.Service> services = new HashMap<>();
-        Map<String, String> response = operation
-                .getServices()
-                .get(SERVICE_NAME)
-                .getRequest();
+        com.github.voteva.Service providerService = new com.github.voteva.Service();
+        if (operation.getServices() != null
+                && operation.getServices().get(SERVICE_NAME) != null) {
+            providerService = operation.getServices().get(SERVICE_NAME);
+        }
+
+        Map<String, String> request = new HashMap<>();
+        if (providerService.getRequest() != null) {
+            request = providerService.getRequest();
+        }
+        Map<String, String> response = request;
+
         response.put("amount", String.valueOf(Math.random()));
 
-        com.github.voteva.Service bonusService = com.github.voteva.Service.builder()
-                .request(operation
-                        .getServices()
-                        .get(SERVICE_NAME)
-                        .getRequest())
-                .response(response)
-                .build();
-        services.put(SERVICE_NAME, bonusService);
-        operation.setServices(services);
+        providerService.setRequest(request);
+        providerService.setResponse(response);
+
+        operation.getServices().put(SERVICE_NAME, providerService);
         return operation;
     }
 }
