@@ -50,7 +50,7 @@ public class ConsumerServiceImpl implements ConsumerService<String, String> {
         if (provider.getRequest() != null) {
             request = provider.getRequest();
         }
-        Map<String, String> response = request;
+        Map<String, String> response = new HashMap<>();
 
         ProviderDto providerDto = providerService.getProviderById(request.get(PROVIDER_ID));
 
