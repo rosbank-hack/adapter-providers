@@ -59,6 +59,7 @@ public class ConsumerServiceImpl implements ConsumerService<String, String> {
             response.put(PROVIDER_NAME, providerDto.getProviderName());
             response.put(PROVIDER_MCC, providerDto.getProviderMcc());
             response.put(PROVIDER_ICON, providerDto.getProviderIcon());
+            operation.setMcc(providerDto.getProviderMcc());
         }
 
         provider.setRequest(request);
