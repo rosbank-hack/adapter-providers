@@ -1,9 +1,7 @@
 package ros.hack.providers.service;
 
-import com.github.voteva.Operation;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 
-import java.util.List;
-
-public interface ConsumerService {
-    void consume(List<Operation> items);
+public interface ConsumerService<K, V> {
+    void consume(ConsumerRecord<K, V> items);
 }

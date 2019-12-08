@@ -23,15 +23,18 @@ public class ProviderServiceImpl implements ProviderService {
     public ProviderDto getProviderById(String providerId) {
         ProviderDto providerDto = new ProviderDto();
         List<ProviderDto> providers;
-        String path = "providers.json";
         try {
-            providers = Arrays.asList(objectMapper.readValue(new File(path), ProviderDto[].class));
+            File file = new File(
+                    getClass().getClassLoader().getResource("providers.json").getFile());
+            providers = Arrays.asList(objectMapper.readValue(file, ProviderDto[].class));
             providerDto = providers.stream()
                     .filter(provider -> providerId.equals(provider.getProviderId()))
                     .findAny()
                     .orElse(null);
         } catch (IOException e) {
             log.error("IOException: " + e);
+        } catch (NullPointerException e) {
+            log.error("File was not found");
         }
         return providerDto;
     }
