@@ -1,7 +1,6 @@
 package ros.hack.providers.service.impl;
 
 import com.github.voteva.Operation;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -14,6 +13,7 @@ import ros.hack.providers.service.ConsumerService;
 import ros.hack.providers.service.ProducerService;
 import ros.hack.providers.service.ProviderService;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,12 +34,12 @@ public class ConsumerServiceImpl implements ConsumerService<String, String> {
     @KafkaListener(topics = "${kafka.payment-topic}",
             containerFactory = "kafkaListenerContainerFactory",
             groupId = "${kafka.group-id")
-    public void consume(@NonNull ConsumerRecord<String, String> consumerRecord) {
+    public void consume(@Nonnull ConsumerRecord<String, String> consumerRecord) {
         log.info(consumerRecord.toString());
         producerService.send(kafkaProperties.getOperationTopic(), (addOperation(parse(consumerRecord.value()))));
     }
 
-    private Operation addOperation(@NonNull Operation operation) {
+    private Operation addOperation(@Nonnull Operation operation) {
         com.github.voteva.Service provider = new com.github.voteva.Service();
         if (operation.getServices() != null
                 && operation.getServices().get(SERVICE_NAME) != null) {
@@ -65,6 +65,7 @@ public class ConsumerServiceImpl implements ConsumerService<String, String> {
         provider.setRequest(request);
         provider.setResponse(response);
 
+        operation.setPublisher(SERVICE_NAME);
         operation.getServices().put(SERVICE_NAME, provider);
         return operation;
     }

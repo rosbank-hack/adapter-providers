@@ -2,7 +2,7 @@
   {
     "providerId": "5ecc429f-09e0-4191-bf50-ea7d9cce9c97",
     "providerName": "Пятерочка",
-    "providerIcon": "https://drive.google.com/uc?authuser=0&id=1iHOGbeqSfpP6AGi0Reh-yVh9pbmqwgKD&export=download",
+    "providerIcon": "https://drive.google.com/uc?authuser=0&id=1wCmrul1MN3KCg76LNMjuCEZpXMO4MtND&export=download",
     "providerMcc": "Супермаркет"
   },
   {
@@ -16,5 +16,11 @@
     "providerName": "Burger King",
     "providerIcon": "https://drive.google.com/uc?authuser=0&id=19KPW1cjngoZxiyIdFMHXkjjA6xyF90GN&export=download",
     "providerMcc": "Фастфуд"
+  },
+  {
+    "providerId": "8a7fa076-e5b7-4358-bd68-bff1b95c7a9b",
+    "providerName": "Яндекс.Музыка",
+    "providerIcon": "https://drive.google.com/uc?authuser=0&id=1eP4q4r3xh0804J5eGRaZa2qxezb2-43D&export=download",
+    "providerMcc": "Развлечения"
   }
 ]
